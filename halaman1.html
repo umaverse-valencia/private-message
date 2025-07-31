@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Member | Private Message JKT48</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #222 0%, #fff 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header {
+      margin-top: 32px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .header h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: #e60012;
+      font-size: 2.2rem;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+    .member-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: center;
+      width: 100%;
+      max-width: 900px;
+    }
+    .member-card {
+      background: rgba(255,255,255,0.97);
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(230,0,18,0.13);
+      width: 200px;
+      padding: 24px 18px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.18s;
+      position: relative;
+    }
+    .member-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 12px 32px rgba(230,0,18,0.18);
+    }
+    .profile-img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e60012;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+    .member-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      color: #e60012;
+      margin-bottom: 18px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+    .open-btn {
+      background: linear-gradient(90deg, #e60012 60%, #ffb6c1 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 0;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: auto;
+    }
+    .open-btn:hover {
+      background: linear-gradient(90deg, #c2000f 60%, #ffb6c1 100%);
+    }
+    /* Modal Animasi Kode Pembelian */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      padding: 32px 28px 24px 28px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: popIn 0.35s;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      left: unset;
+      top: unset;
+      transform: none;
+    }
+    .modal-box h2,
+    .modal-box > div,
+    .modal-box input,
+    .modal-box .modal-btn {
+      text-align: center;
+      align-self: center;
+    }
+    .modal-box input {
+      width: 90%;
+      margin: 0 auto 16px auto;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1.5px solid #e60012;
+      font-size: 1rem;
+      text-align: center;
+      transition: border 0.2s;
+      display: block;
+    }
+    .modal-box input:focus {
+      border: 2px solid #e60012;
+      outline: none;
+    }
+    .modal-box .modal-btn {
+      width: 100%;
+      padding: 11px 0;
+      background: linear-gradient(90deg, #e60012 60%, #ffb6c1 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 8px;
+    }
+    .modal-box .modal-btn:hover {
+      background: linear-gradient(90deg, #c2000f 60%, #ffb6c1 100%);
+    }
+    .modal-box .modal-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.2rem;
+      position: absolute;
+      top: 10px;
+      right: 16px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-box .modal-close:hover {
+      color: #e60012;
+    }
+    .modal-error {
+      color: #e60012;
+      font-size: 0.98rem;
+      margin-bottom: 10px;
+      min-height: 18px;
+      transition: opacity 0.2s;
+      opacity: 1;
+      text-align: center;
+      width: 100%;
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to { opacity: 1 }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0 }
+      80% { transform: scale(1.05); opacity: 1 }
+      100% { transform: scale(1); }
+    }
+    @media (max-width: 700px) {
+      .member-list {
+        gap: 18px;
+      }
+      .member-card {
+        width: 140px;
+        padding: 16px 8px 12px 8px;
+      }
+      .profile-img {
+        width: 60px;
+        height: 60px;
+      }
+      .member-name {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Member JKT48</h1>
+    <div style="color:#fff;font-size:1rem;margin-top:8px;">Pilih member favoritmu untuk mulai chat!</div>
+  </div>
+  <div id="kodeModal" style="display:none"></div>
+  <script>
+  // Kode pembelian unik untuk setiap member
+  const kodePembelian = {
+    erine: "JKT48PM2025",
+    oline: "OLINE48PM",
+    christy: "CHRISTYPM",
+    fritzy: "FRITZYPM",
+    aralie: "ARALIEPM",
+    michie: "MICHIEPM",
+    lily: "LILYPM",
+    freya: "FREYAPM",
+    alya: "ALYAPM",
+    delyn: "DELYNPM",
+    trisha: "TRISHAPM",
+    chyntia: "CHYNTIAPM",
+    kimy: "KIMYPM"
+  };
+
+  // Simpan status terbuka per member
+  const terbukaStatus = {};
+
+  function bukaChat(member, link) {
+    showKodeModal(member, link);
+  }
+
+  function showKodeModal(member, link) {
+    const modal = document.getElementById('kodeModal');
+    modal.innerHTML = `
+      <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+          <button class="modal-close" onclick="closeKodeModal()">&times;</button>
+          <h2>Masukkan Kode Pembelian</h2>
+          <div style="color:#444;font-size:1rem;margin-bottom:12px;">Kode pembelian diperlukan untuk membuka chat member.</div>
+          <div id="modalError" class="modal-error"></div>
+          <input type="text" id="kodeInput" placeholder="Kode Pembelian" autocomplete="off" autofocus>
+          <button class="modal-btn" onclick="submitKode('${member}','${link}')">Buka Chat</button>
+        </div>
+      </div>
+    `;
+    modal.style.display = "block";
+    setTimeout(() => {
+      document.getElementById('kodeInput').focus();
+    }, 200);
+  }
+
+  function closeKodeModal() {
+    document.getElementById('kodeModal').style.display = "none";
+  }
+
+  function showSuccessNotif(namaMember) {
+    // Buat notifikasi sukses di tengah layar
+    let notif = document.createElement('div');
+    notif.id = "notif-berhasil";
+    notif.style.position = "fixed";
+    notif.style.top = "50%";
+    notif.style.left = "50%";
+    notif.style.transform = "translate(-50%,-50%)";
+    notif.style.background = "#28a745";
+    notif.style.color = "#fff";
+    notif.style.padding = "22px 32px";
+    notif.style.borderRadius = "14px";
+    notif.style.fontSize = "1.1rem";
+    notif.style.fontFamily = "'Montserrat',sans-serif";
+    notif.style.boxShadow = "0 4px 24px rgba(40,167,69,0.18)";
+    notif.style.zIndex = "10000";
+    notif.style.textAlign = "center";
+    notif.innerHTML = `Pembelian chat <b>${namaMember}</b> berhasil!<br>Silakan lanjutkan chat di Telegram.`;
+    document.body.appendChild(notif);
+    setTimeout(() => {
+      notif.remove();
+    }, 2000);
+  }
+
+  function submitKode(member, link) {
+    const kode = document.getElementById('kodeInput').value.trim();
+    const errorDiv = document.getElementById('modalError');
+    if (!kode) {
+      errorDiv.textContent = "Kode pembelian wajib diisi!";
+      return;
+    }
+    if (kode === kodePembelian[member]) {
+      // Ubah tombol menjadi hijau dan teks jadi "Terbuka"
+      terbukaStatus[member] = true;
+      updateButtonStatus(member);
+      closeKodeModal();
+      // Ambil nama member dari card
+      const memberCards = document.querySelectorAll('.member-card');
+      let namaMember = member;
+      memberCards.forEach(card => {
+        const nameDiv = card.querySelector('.member-name');
+        if (nameDiv && nameDiv.textContent.trim().toLowerCase() === member) {
+          namaMember = nameDiv.textContent.trim();
+        }
+      });
+      showSuccessNotif(namaMember);
+      setTimeout(() => {
+        window.location.href = link;
+      }, 1200);
+    } else {
+      errorDiv.textContent = "Admin menyatakan: Gagal membuka chat, kode tidak valid!";
+      document.getElementById('kodeInput').value = "";
+      document.getElementById('kodeInput').focus();
+    }
+  }
+
+  function updateButtonStatus(member) {
+    // Cari tombol berdasarkan urutan member-card
+    const memberCards = document.querySelectorAll('.member-card');
+    memberCards.forEach(card => {
+      const nameDiv = card.querySelector('.member-name');
+      if (!nameDiv) return;
+      let nama = nameDiv.textContent.trim().toLowerCase();
+      if (nama === member) {
+        const btn = card.querySelector('.open-btn');
+        if (btn) {
+          btn.textContent = "Terbuka";
+          btn.style.background = "linear-gradient(90deg, #28a745 60%, #b6ffc1 100%)";
+          btn.style.color = "#fff";
+          btn.disabled = true;
+          btn.style.cursor = "default";
+        }
+      }
+    });
+  }
+
+  // Tutup modal jika klik di luar box
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('kodeModal');
+    if (modal.style.display === "block") {
+      const box = document.querySelector('.modal-box');
+      if (box && !box.contains(e.target) && !e.target.classList.contains('open-btn')) {
+        closeKodeModal();
+      }
+    }
+  });
+</script>
+  <div class="member-list">
+    <!-- Oline -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/olinepm.webp" alt="Oline">
+      <div class="member-name">Oline</div>
+      <button class="open-btn" onclick="bukaChat('oline','https://t.me/+rukT9POwjz0xNTM1')">Buka</button>
+    </div>
+    <!-- Christy -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/christypm.jpg" alt="Christy">
+      <div class="member-name">Christy</div>
+      <button class="open-btn" onclick="bukaChat('christy','https://t.me/+dJhGbo96LUtkODVl')">Buka</button>
+    </div>
+    <!-- Fritzy -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/fritzypm.jpg" alt="Fritzy">
+      <div class="member-name">Fritzy</div>
+      <button class="open-btn" onclick="bukaChat('fritzy','https://t.me/+AmZoUb24BYA0MDY1')">Buka</button>
+    </div>
+    <!-- Aralie -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/araliepm.jpg" alt="Aralie">
+      <div class="member-name">Aralie</div>
+      <button class="open-btn" onclick="bukaChat('aralie','https://t.me/+1SqiKMmMMfAwMzc1')">Buka</button>
+    </div>
+    <!-- Michie -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/michepm.jpg" alt="Michie">
+      <div class="member-name">Michie</div>
+      <button class="open-btn" onclick="bukaChat('michie','https://t.me/+ydGfilTd0UJiNTg1')">Buka</button>
+    </div>
+    <!-- Lily -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/lilypm.jpg" alt="Lily">
+      <div class="member-name">Lily</div>
+      <button class="open-btn" onclick="bukaChat('lily','https://t.me/+Kbyp03ZTuW8xZDk9')">Buka</button>
+    </div>
+    <!-- Freya -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/freyapm.jpg" alt="Freya">
+      <div class="member-name">Freya</div>
+      <button class="open-btn" onclick="bukaChat('freya','https://t.me/+nzLGfKYpiBkzYTU1')">Buka</button>
+    </div>
+    <!-- Alya -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/alyapm.jpg" alt="Alya">
+      <div class="member-name">Alya</div>
+      <button class="open-btn" onclick="bukaChat('alya','https://t.me/+v5NlXAwP8yllYTc1')">Buka</button>
+    </div>
+    <!-- Delyn -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/delynpm.jpg" alt="Delyn">
+      <div class="member-name">Delyn</div>
+      <button class="open-btn" onclick="bukaChat('delyn','https://t.me/+delynlink')">Buka</button>
+    </div>
+    <!-- Trisha -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/trishapm.jpg" alt="Trisha">
+      <div class="member-name">Trisha</div>
+      <button class="open-btn" onclick="bukaChat('trisha','https://t.me/+trishalink')">Buka</button>
+    </div>
+    <!-- Chyntia -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/chyntiapm.jpg" alt="Chyntia">
+      <div class="member-name">Chyntia</div>
+      <button class="open-btn" onclick="bukaChat('chyntia','https://t.me/+chyntialink')">Buka</button>
+    </div>
+    <!-- Kimy -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/kimypm.jpg" alt="Kimy">
+      <div class="member-name">Kimy</div>
+      <button class="open-btn" onclick="bukaChat('kimy','https://t.me/+kimylink')">Buka</button>
+    </div>
+    <!-- Erine (pindah ke paling bawah) -->
+    <div class="member-card">
+      <img class="profile-img" src="gambar/erinepm.webp" alt="Erine">
+      <div class="member-name">Erine</div>
+      <div style="color:#007bff;font-size:0.98rem;margin-bottom:10px;font-weight:bold;text-align:center;">Punya Admin Umaedi</div>
+      <button class="open-btn" onclick="bukaChat('erine','https://t.me/+jZskjEuvGa0zYjZl')">Buka</button>
+    </div>
+  </div>
+</body>
+</html>

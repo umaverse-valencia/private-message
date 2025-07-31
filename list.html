@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Price List PM JKT48</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #222 0%, #fff 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      background: rgba(255,255,255,0.97);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(34,34,34,0.13);
+      padding: 36px 28px 28px 28px;
+      margin-top: 48px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: #e60012;
+      margin-bottom: 10px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+    .desc {
+      color: #444;
+      margin-bottom: 24px;
+      font-size: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+    }
+    th, td {
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 1.08rem;
+    }
+    th {
+      background: #e60012;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    tr:nth-child(odd) {
+      background: #fff;
+    }
+    .back-btn {
+      margin-top: 18px;
+      background: linear-gradient(90deg, #e60012 60%, #ffb6c1 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 0;
+      width: 100%;
+      font-size: 1.08rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .back-btn:hover {
+      background: linear-gradient(90deg, #c2000f 60%, #ffb6c1 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Price List PM JKT48</h1>
+    <div class="desc">Durasi <b>Permanen</b> — Pilih paket sesuai kebutuhanmu!</div>
+    <form id="formPaket" style="margin-bottom:18px;">
+      <table>
+        <tr>
+          <th>Paket</th>
+          <th>Harga</th>
+          <th>Pilih</th>
+        </tr>
+        <tr>
+          <td>1 Member</td>
+          <td>Rp 8.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM 1 Member Rp 8.000" required></td>
+        </tr>
+        <tr>
+          <td>4 Member</td>
+          <td>Rp 18.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM 4 Member Rp 18.000"></td>
+        </tr>
+        <tr>
+          <td>6 Member</td>
+          <td>Rp 25.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM 6 Member Rp 25.000"></td>
+        </tr>
+        <tr>
+          <td>8 Member</td>
+          <td>Rp 30.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM 8 Member Rp 30.000"></td>
+        </tr>
+        <tr>
+          <td>10 Member Inti</td>
+          <td>Rp 35.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM 10 Member Inti Rp 35.000"></td>
+        </tr>
+        <tr>
+          <td>All Member Trainee</td>
+          <td>Rp 45.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM All Member Trainee Rp 45.000"></td>
+        </tr>
+        <tr>
+          <td>All Member Inti</td>
+          <td>Rp 60.000</td>
+          <td><input type="radio" name="paket" value="Saya ingin membeli PM All Member Inti Rp 60.000"></td>
+        </tr>
+      </table>
+      <button type="submit" class="back-btn" style="margin-top:0;">Kirim & Beli via WhatsApp</button>
+    </form>
+    <a href="index.html" class="back-btn">Kembali ke Login</a>
+  </div>
+  <script>
+    document.getElementById('formPaket').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const paket = document.querySelector('input[name="paket"]:checked').value;
+      const nomor = "6283818115136";
+      const pesan = encodeURIComponent(paket);
+      window.location.href = `https://wa.me/${nomor}?text=${pesan}`;
+    });
+  </script>
+</body>
+</html>
