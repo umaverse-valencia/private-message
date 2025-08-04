@@ -7,13 +7,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #222 0%, #fff 100%);
       min-height: 100vh;
       margin: 0;
       font-family: 'Roboto', Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+      background: none !important;
+      background-color: transparent !important;
+    }
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: #222;
+      background-image: url('');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50% 50%;
+      z-index: -1;
+      top: 0;
+      left: 0;
     }
     .header {
       margin-top: 32px;
@@ -324,6 +338,7 @@
   </style>
 </head>
 <body>
+  <div id="particles-js"></div>
   <div class="header">
     <h1>Member JKT48</h1>
     <div style="color:#fff;font-size:1rem;margin-top:8px;">Pilih member favoritmu untuk mulai chat!</div>
@@ -592,5 +607,101 @@
       <button class="open-btn" onclick="bukaChat('erine','https://t.me/+jZskjEuvGa0zYjZl','gambar/erinepm.webp','Erine')">Buka</button>
     </div>
   </div>
+
+  <!-- Particle.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS('particles-js', {
+      "particles": {
+        "number": {
+          "value": 38,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": ["#e60012", "#ffb6c1", "#ffffff", "#cccccc"]
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#fff"
+          }
+        },
+        "opacity": {
+          "value": 0.7,
+          "random": true,
+          "anim": {
+            "enable": false
+          }
+        },
+        "size": {
+          "value": 6,
+          "random": true,
+          "anim": {
+            "enable": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 140,
+          "color": "#cccccc",
+          "opacity": 0.25,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2.2,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "grab"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 180,
+            "line_linked": {
+              "opacity": 0.45
+            }
+          },
+          "bubble": {
+            "distance": 250,
+            "size": 12,
+            "duration": 2,
+            "opacity": 0.8,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 120,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
 </body>
 </html>
