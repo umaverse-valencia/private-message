@@ -34,6 +34,7 @@
       justify-content: center;
       width: 100%;
       max-width: 900px;
+      perspective: 900px; /* Aktifkan perspektif 3D */
     }
     .member-card {
       background: rgba(255,255,255,0.97);
@@ -44,12 +45,37 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform 0.18s;
+      transition: transform 0.18s, box-shadow 0.18s;
       position: relative;
+      z-index: 1;
+      overflow: visible;
+      transform-style: preserve-3d; /* Aktifkan transformasi 3D */
+      will-change: transform;
     }
     .member-card:hover {
       transform: translateY(-6px) scale(1.03);
       box-shadow: 0 12px 32px rgba(230,0,18,0.18);
+    }
+    .member-card::before {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border-radius: 22px;
+      z-index: -1;
+      background: linear-gradient(120deg, #e60012, #ffb600, #00e6b6, #007bff, #a600ff, #e60012);
+      background-size: 400% 400%;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .member-card:hover::before {
+      opacity: 1;
+      animation: borderGradientMove 2.5s linear infinite;
+    }
+    @keyframes borderGradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     .profile-img {
       width: 130px;
@@ -82,9 +108,26 @@
       cursor: pointer;
       transition: background 0.2s;
       margin-top: auto;
+      position: relative;
+      overflow: hidden; /* Agar kilauan tidak keluar dari tombol */
     }
-    .open-btn:hover {
-      background: linear-gradient(90deg, #c2000f 60%, #ffb6c1 100%);
+    .open-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.0) 100%);
+      transform: skewX(-25deg);
+      pointer-events: none;
+    }
+    .open-btn:hover::before {
+      animation: shine 0.8s linear;
+    }
+    @keyframes shine {
+      0% { left: -60%; }
+      100% { left: 110%; }
     }
     /* Modal Animasi Kode Pembelian */
     .modal-overlay {
@@ -179,6 +222,25 @@
       text-align: center;
       width: 100%;
       display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      animation: shakeError 0.3s;
+    }
+    .modal-error .icon-x {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    @keyframes shakeError {
+      0% { transform: translateX(0);}
+      20% { transform: translateX(-6px);}
+      40% { transform: translateX(6px);}
+      60% { transform: translateX(-4px);}
+      80% { transform: translateX(4px);}
+      100% { transform: translateX(0);}
     }
     @keyframes fadeIn {
       from { opacity: 0 }
@@ -188,6 +250,60 @@
       0% { transform: scale(0.7); opacity: 0 }
       80% { transform: scale(1.05); opacity: 1 }
       100% { transform: scale(1); }
+    }
+    .notif-success {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%) scale(0.9);
+      background: #28a745;
+      color: #fff;
+      padding: 22px 32px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-family: 'Montserrat',sans-serif;
+      box-shadow: 0 4px 24px rgba(40,167,69,0.18);
+      z-index: 10000;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: notifBounce 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes notifBounce {
+      0% { opacity: 0; transform: translate(-50%,-50%) scale(0.7);}
+      60% { opacity: 1; transform: translate(-50%,-50%) scale(1.08);}
+      100% { opacity: 1; transform: translate(-50%,-50%) scale(1);}
+    }
+    .notif-success .icon-check {
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+    }
+    .modal-member-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 2px solid #e60012;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(230,0,18,0.10);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .modal-member-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      color: #e60012;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .modal-box {
+      padding-top: 24px; /* Tambahkan padding atas agar tidak mepet */
     }
     @media (max-width: 700px) {
       .member-list {
@@ -216,15 +332,15 @@
   <script>
   // Kode pembelian unik untuk setiap member
   const kodePembelian = {
-    erine: "JKT48PM2025",
+    erine: "UMAEDIPUNYAERINE2025",
     oline: "OLINE48PM",
-    christy: "CHRISTYPM",
-    fritzy: "FRITZYPM",
-    aralie: "ARALIEPM",
-    michie: "MICHIEPM",
-    lily: "LILYPM",
-    freya: "FREYAPM",
-    alya: "ALYAPM",
+    christy: "CHRISTOY",
+    fritzy: "FRITZYY541",
+    aralie: "ARALIEPM21",
+    michie: "MICHIEPM00",
+    lily: "LILYPM23",
+    freya: "FREYAPM48",
+    alya: "ALYAPM943",
     delyn: "DELYNPM",
     trisha: "TRISHAPM",
     chyntia: "CHYNTIAPM",
@@ -234,15 +350,17 @@
   // Simpan status terbuka per member
   const terbukaStatus = {};
 
-  function bukaChat(member, link) {
-    showKodeModal(member, link);
+  function bukaChat(member, link, memberImageSrc, memberName) {
+    showKodeModal(member, link, memberImageSrc, memberName);
   }
 
-  function showKodeModal(member, link) {
+  function showKodeModal(member, link, memberImageSrc, memberName) {
     const modal = document.getElementById('kodeModal');
     modal.innerHTML = `
       <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
+          <img src="${memberImageSrc}" alt="${memberName}" class="modal-member-img">
+          <div class="modal-member-name">${memberName}</div>
           <button class="modal-close" onclick="closeKodeModal()">&times;</button>
           <h2>Masukkan Kode Pembelian</h2>
           <div style="color:#444;font-size:1rem;margin-bottom:12px;">Kode pembelian diperlukan untuk membuka chat member.</div>
@@ -263,23 +381,20 @@
   }
 
   function showSuccessNotif(namaMember) {
-    // Buat notifikasi sukses di tengah layar
+    // Buat notifikasi sukses di tengah layar dengan ikon dan animasi
     let notif = document.createElement('div');
-    notif.id = "notif-berhasil";
-    notif.style.position = "fixed";
-    notif.style.top = "50%";
-    notif.style.left = "50%";
-    notif.style.transform = "translate(-50%,-50%)";
-    notif.style.background = "#28a745";
-    notif.style.color = "#fff";
-    notif.style.padding = "22px 32px";
-    notif.style.borderRadius = "14px";
-    notif.style.fontSize = "1.1rem";
-    notif.style.fontFamily = "'Montserrat',sans-serif";
-    notif.style.boxShadow = "0 4px 24px rgba(40,167,69,0.18)";
-    notif.style.zIndex = "10000";
-    notif.style.textAlign = "center";
-    notif.innerHTML = `Pembelian chat <b>${namaMember}</b> berhasil!<br>Silakan lanjutkan chat di Telegram.`;
+    notif.className = "notif-success";
+    notif.innerHTML = `
+      <span class="icon-check">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="16" fill="#fff" opacity="0.18"/>
+          <path d="M9 17.5l5 5 9-10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span>
+        Pembelian chat <b>${namaMember}</b> berhasil!<br>Silakan lanjutkan chat di Telegram.
+      </span>
+    `;
     document.body.appendChild(notif);
     setTimeout(() => {
       notif.remove();
@@ -287,34 +402,58 @@
   }
 
   function submitKode(member, link) {
-    const kode = document.getElementById('kodeInput').value.trim();
+    const kodeInput = document.getElementById('kodeInput');
+    const kode = kodeInput.value.trim();
     const errorDiv = document.getElementById('modalError');
+    // Reset warna input setiap submit
+    kodeInput.style.border = "1.5px solid #e60012";
+    kodeInput.style.background = "#fff";
     if (!kode) {
-      errorDiv.textContent = "Kode pembelian wajib diisi!";
+      errorDiv.innerHTML = `<span class="icon-x">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="10" fill="#e60012" opacity="0.13"/>
+          <path d="M6 6l8 8M14 6l-8 8" stroke="#e60012" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </span> Kode pembelian wajib diisi!`;
+      errorDiv.style.animation = "shakeError 0.3s";
       return;
     }
     if (kode === kodePembelian[member]) {
-      // Ubah tombol menjadi hijau dan teks jadi "Terbuka"
+      // Tampilkan warna hijau pada input sebelum modal ditutup
+      kodeInput.style.border = "2px solid #28a745";
+      kodeInput.style.background = "#e6ffe6";
       terbukaStatus[member] = true;
       updateButtonStatus(member);
-      closeKodeModal();
-      // Ambil nama member dari card
-      const memberCards = document.querySelectorAll('.member-card');
-      let namaMember = member;
-      memberCards.forEach(card => {
-        const nameDiv = card.querySelector('.member-name');
-        if (nameDiv && nameDiv.textContent.trim().toLowerCase() === member) {
-          namaMember = nameDiv.textContent.trim();
-        }
-      });
-      showSuccessNotif(namaMember);
+      // Tunda penutupan modal agar user melihat efek hijau
       setTimeout(() => {
-        window.location.href = link;
-      }, 1200);
+        closeKodeModal();
+        // Ambil nama member dari card
+        const memberCards = document.querySelectorAll('.member-card');
+        let namaMember = member;
+        memberCards.forEach(card => {
+          const nameDiv = card.querySelector('.member-name');
+          if (nameDiv && nameDiv.textContent.trim().toLowerCase() === member) {
+            namaMember = nameDiv.textContent.trim();
+          }
+        });
+        showSuccessNotif(namaMember);
+        setTimeout(() => {
+          window.location.href = link;
+        }, 1200);
+      }, 500); // 0.5 detik agar user sempat melihat efek hijau
     } else {
-      errorDiv.textContent = "Admin menyatakan: Gagal membuka chat, kode tidak valid!";
-      document.getElementById('kodeInput').value = "";
-      document.getElementById('kodeInput').focus();
+      errorDiv.innerHTML = `<span class="icon-x">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="10" fill="#e60012" opacity="0.13"/>
+          <path d="M6 6l8 8M14 6l-8 8" stroke="#e60012" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </span> Admin menyatakan: Gagal membuka chat, kode tidak valid!`;
+      kodeInput.value = "";
+      kodeInput.focus();
+      errorDiv.style.animation = "shakeError 0.3s";
+      // Form tetap merah (tidak berubah warna)
+      kodeInput.style.border = "2px solid #e60012";
+      kodeInput.style.background = "#fff";
     }
   }
 
@@ -338,6 +477,29 @@
     });
   }
 
+  // Efek 3D pada member-card
+  document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.member-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', function(e) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        // Hitung rotasi, semakin jauh dari tengah semakin miring
+        const rotateY = ((x - centerX) / centerX) * 12; // max 12deg
+        const rotateX = -((y - centerY) / centerY) * 12;
+        card.style.transform = `translateY(-6px) scale(1.03) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.boxShadow = "0 16px 40px rgba(230,0,18,0.18)";
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = "translateY(0) scale(1)";
+        card.style.boxShadow = "0 6px 24px rgba(230,0,18,0.13)";
+      });
+    });
+  });
+
   // Tutup modal jika klik di luar box
   document.addEventListener('click', function(e) {
     const modal = document.getElementById('kodeModal');
@@ -354,80 +516,80 @@
     <div class="member-card">
       <img class="profile-img" src="gambar/olinepm.webp" alt="Oline">
       <div class="member-name">Oline</div>
-      <button class="open-btn" onclick="bukaChat('oline','https://t.me/+rukT9POwjz0xNTM1')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('oline','https://t.me/+rukT9POwjz0xNTM1','gambar/olinepm.webp','Oline')">Buka</button>
     </div>
     <!-- Christy -->
     <div class="member-card">
       <img class="profile-img" src="gambar/christypm.jpg" alt="Christy">
       <div class="member-name">Christy</div>
-      <button class="open-btn" onclick="bukaChat('christy','https://t.me/+dJhGbo96LUtkODVl')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('christy','https://t.me/+dJhGbo96LUtkODVl','gambar/christypm.jpg','Christy')">Buka</button>
     </div>
     <!-- Fritzy -->
     <div class="member-card">
       <img class="profile-img" src="gambar/fritzypm.jpg" alt="Fritzy">
       <div class="member-name">Fritzy</div>
-      <button class="open-btn" onclick="bukaChat('fritzy','https://t.me/+AmZoUb24BYA0MDY1')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('fritzy','https://t.me/+AmZoUb24BYA0MDY1','gambar/fritzypm.jpg','Fritzy')">Buka</button>
     </div>
     <!-- Aralie -->
     <div class="member-card">
       <img class="profile-img" src="gambar/araliepm.jpg" alt="Aralie">
       <div class="member-name">Aralie</div>
-      <button class="open-btn" onclick="bukaChat('aralie','https://t.me/+1SqiKMmMMfAwMzc1')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('aralie','https://t.me/+1SqiKMmMMfAwMzc1','gambar/araliepm.jpg','Aralie')">Buka</button>
     </div>
     <!-- Michie -->
     <div class="member-card">
       <img class="profile-img" src="gambar/michepm.jpg" alt="Michie">
       <div class="member-name">Michie</div>
-      <button class="open-btn" onclick="bukaChat('michie','https://t.me/+ydGfilTd0UJiNTg1')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('michie','https://t.me/+ydGfilTd0UJiNTg1','gambar/michepm.jpg','Michie')">Buka</button>
     </div>
     <!-- Lily -->
     <div class="member-card">
       <img class="profile-img" src="gambar/lilypm.jpg" alt="Lily">
       <div class="member-name">Lily</div>
-      <button class="open-btn" onclick="bukaChat('lily','https://t.me/+Kbyp03ZTuW8xZDk9')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('lily','https://t.me/+Kbyp03ZTuW8xZDk9','gambar/lilypm.jpg','Lily')">Buka</button>
     </div>
     <!-- Freya -->
     <div class="member-card">
       <img class="profile-img" src="gambar/freyapm.jpg" alt="Freya">
       <div class="member-name">Freya</div>
-      <button class="open-btn" onclick="bukaChat('freya','https://t.me/+nzLGfKYpiBkzYTU1')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('freya','https://t.me/+nzLGfKYpiBkzYTU1','gambar/freyapm.jpg','Freya')">Buka</button>
     </div>
     <!-- Alya -->
     <div class="member-card">
       <img class="profile-img" src="gambar/alyapm.jpg" alt="Alya">
       <div class="member-name">Alya</div>
-      <button class="open-btn" onclick="bukaChat('alya','https://t.me/+v5NlXAwP8yllYTc1')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('alya','https://t.me/+v5NlXAwP8yllYTc1','gambar/alyapm.jpg','Alya')">Buka</button>
     </div>
     <!-- Delyn -->
     <div class="member-card">
       <img class="profile-img" src="gambar/delynpm.jpg" alt="Delyn">
       <div class="member-name">Delyn</div>
-      <button class="open-btn" onclick="bukaChat('delyn','https://t.me/+delynlink')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('delyn','https://t.me/+VX0eEzkCQ6hlNzdl','gambar/delynpm.jpg','Delyn')">Buka</button>
     </div>
     <!-- Trisha -->
     <div class="member-card">
       <img class="profile-img" src="gambar/trishapm.jpg" alt="Trisha">
       <div class="member-name">Trisha</div>
-      <button class="open-btn" onclick="bukaChat('trisha','https://t.me/+trishalink')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('trisha','https://t.me/+JkXr_Q75YjhlZjll','gambar/trishapm.jpg','Trisha')">Buka</button>
     </div>
     <!-- Chyntia -->
     <div class="member-card">
       <img class="profile-img" src="gambar/chyntiapm.jpg" alt="Chyntia">
       <div class="member-name">Chyntia</div>
-      <button class="open-btn" onclick="bukaChat('chyntia','https://t.me/+chyntialink')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('chyntia','https://t.me/+aNzJDkz3QDljNTQ1','gambar/chyntiapm.jpg','Chyntia')">Buka</button>
     </div>
     <!-- Kimy -->
     <div class="member-card">
       <img class="profile-img" src="gambar/kimypm.jpg" alt="Kimy">
       <div class="member-name">Kimy</div>
-      <button class="open-btn" onclick="bukaChat('kimy','https://t.me/+kimylink')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('kimy','https://t.me/+kimylink','gambar/kimypm.jpg','Kimy')">Buka</button>
     </div>
     <!-- Erine (pindah ke paling bawah) -->
     <div class="member-card">
       <img class="profile-img" src="gambar/erinepm.webp" alt="Erine">
       <div class="member-name">Erine</div>
       <div style="color:#007bff;font-size:0.98rem;margin-bottom:10px;font-weight:bold;text-align:center;">Punya Admin Umaedi</div>
-      <button class="open-btn" onclick="bukaChat('erine','https://t.me/+jZskjEuvGa0zYjZl')">Buka</button>
+      <button class="open-btn" onclick="bukaChat('erine','https://t.me/+jZskjEuvGa0zYjZl','gambar/erinepm.webp','Erine')">Buka</button>
     </div>
   </div>
 </body>
